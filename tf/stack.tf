@@ -9,3 +9,19 @@ resource "aws_key_pair" "ben_key_pair" {
 }
 
 
+variable "count-1a" {
+  default = 1
+}
+
+variable "count-1b" {
+  default = 1
+}
+
+variable "managers_in_zone" {
+  default = 1
+}
+
+variable "instance_type" {
+  default = "t2.nano"
+}
+
