@@ -45,18 +45,25 @@ resource "aws_instance" "swarm-node-master" {
     Name = "swarm-node-master"
   }
 
-  # provisioner "file" {
-  #   source      = "provision"
-  #   destination = "/tmp"
-  # }
 
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "chmod 755 /tmp/provision/provision-master.sh",
-  #     "sudo /tmp/provision/provision-master.sh ${self.tags.Name}"
-  #   ]
-  # }
+  # A remote-exec wait untils the instance is ready
+  # (also, we need python for ansible, but this is faster than sleeping otherwise)
+  provisioner "remote-exec" {
+    inline = [
+      "echo \"hello from remote\"",
+      "sudo apt-get install -y python"
+    ]
+  }
 
+  # And then we run ansible
+  provisioner "local-exec" {
+    command =  "export ANSIBLE_HOST_KEY_CHECKING=False" # Otherwise requires manual input (but could be done better)
+  }
+
+  provisioner "local-exec" {
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${aws_instance.swarm-node-master.public_ip},' ./ansible/swarm-master.yml"
+
+  }
 }
 
 resource "aws_instance" "swarm-node-1a" {
@@ -87,17 +94,6 @@ resource "aws_instance" "swarm-node-1a" {
     role = "${count.index < var.managers_in_zone ? "manager" : "worker"}"
   }
 
-  # provisioner "file" {
-  #   source      = "provision"
-  #   destination = "/tmp"
-  # }
-
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "chmod 755 /tmp/provision/provision-managers.sh",
-  #     "sudo /tmp/provision/provision-managers.sh ${self.tags.Name} ${self.tags.role}"
-  #   ]
-  # }
 }
 
 
@@ -128,16 +124,4 @@ resource "aws_instance" "swarm-node-1b" {
     Name = "swarm-node-1b-${count.index}"
     role = "${count.index < var.managers_in_zone ? "manager" : "worker"}"
   }
-
-  # provisioner "file" {
-  #   source      = "provision"
-  #   destination = "/tmp"
-  # }
-
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "chmod 755 /tmp/provision/provision-managers.sh",
-  #     "sudo /tmp/provision/provision-managers.sh ${self.tags.Name} ${self.tags.role}"
-  #   ]
-  # }
 }

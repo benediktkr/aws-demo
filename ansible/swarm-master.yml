@@ -1,0 +1,18 @@
+- hosts: all
+  become: true
+
+  tasks:
+    - name: test
+      command: /bin/touch /tmp/test.txt
+
+    - name: Set the hostname
+      hostname:
+         name: swarm-node-master
+
+    - name: Add the hostname after `127.0.0.1 localhost` in /etc/hosts
+      lineinfile:
+        dest: /etc/hosts
+        regexp: '^127\.0\.0\.1[ \t]+localhost'
+        line: '127.0.0.1 localhost swarm-node-master'
+        state: present
+
