@@ -25,7 +25,7 @@ variable "domainname" {
 }
 
 variable "node_count" {
-  default = 3
+  default = 5
 }
 
 variable "manager_count" {
@@ -79,6 +79,8 @@ If the domain is delegated with the `NS` records correct, you can use the DNS na
 aws-demo$ ssh swarm-node-1.aws-demo.sudo.is
 ubuntu@swarm-node-0:~$ sudo docker node ls
 ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS
+1nfhj6nuv3z9xnlug91my15h0     swarm-node-3        Ready               Active
+7t5swjgnqu9d3rzh7blven66m     swarm-node-4        Ready               Active
 9mpyjxznwf5tdawrlv8xxfwo8     swarm-node-2        Ready               Active              Reachable
 gumqc06pqtn6vnnoa1fxs5bt0 *   swarm-node-0        Ready               Active              Leader
 n2fflejq35acvil36xsh6ashy     swarm-node-1        Ready               Active              Reachable
