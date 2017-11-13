@@ -9,3 +9,5 @@
     line: '127.0.0.1 localhost {{ myhostname }}'
     state: present
 
+- name: Invoke hostname.sh
+  shell: "/etc/init.d/hostname.sh start"
