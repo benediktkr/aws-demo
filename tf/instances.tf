@@ -18,14 +18,15 @@ data "aws_ami" "ubuntu" {
 
 # Tha master node is put in 1a of "eu-central" (defined in stack.tf)
 
-resource "aws_instance" "swarm-node-master" {
+resource "aws_instance" "swarm-node" {
+  count                       = "${var.manager_count}"
   ami                         = "${data.aws_ami.ubuntu.id}"
   instance_type               = "${var.instance_type}"
   key_name                    = "${aws_key_pair.ben_key_pair.key_name}"
   vpc_security_group_ids      = ["${aws_security_group.aws-demo.id}"]
-  private_ip                  = "10.200.0.10"
+  private_ip                  = "10.200.${count.index % 2 == 0 ? "0" : "1"}.${10 + count.index}"
   associate_public_ip_address = true  # remove when loadbalancer is ready 
-  subnet_id                   = "${aws_subnet.aws-demo-1a.id}"
+  subnet_id                   = "${count.index % 2 == 0 ? aws_subnet.aws-demo-1a.id : aws_subnet.aws-demo-1b.id}"
 
   # lifecycle {
   #   prevent_destroy = true
@@ -42,7 +43,8 @@ resource "aws_instance" "swarm-node-master" {
   }
 
   tags {
-    Name = "swarm-node-master"
+    Name = "swarm-node-${count.index}"
+    # role = "${count.index < var.managers ? "manager" : "worker"}"
   }
 
 
@@ -61,67 +63,7 @@ resource "aws_instance" "swarm-node-master" {
   }
 
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${aws_instance.swarm-node-master.public_ip},' ./ansible/swarm-master.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' ./ansible/swarm-master.yml --extra-vars \"myhostname=${self.tags.Name}\""
 
-  }
-}
-
-resource "aws_instance" "swarm-node-1a" {
-  ami                         = "${data.aws_ami.ubuntu.id}"
-  instance_type               = "${var.instance_type}"
-  key_name                    = "${aws_key_pair.ben_key_pair.key_name}"
-  vpc_security_group_ids      = ["${aws_security_group.aws-demo.id}"]
-  subnet_id                   = "${aws_subnet.aws-demo-1a.id}"
-  count                       = "${var.count-1a}"
-  associate_public_ip_address = true
-
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
-
-  connection {
-    type = "ssh"
-    user = "ubuntu"
-  }
-
-  root_block_device {
-    volume_type = "gp2"
-    volume_size = 20
-  }
-
-  tags {
-    Name = "swarm-node-1a-${count.index}"
-    role = "${count.index < var.managers_in_zone ? "manager" : "worker"}"
-  }
-
-}
-
-
-resource "aws_instance" "swarm-node-1b" {
-  ami                         = "${data.aws_ami.ubuntu.id}"
-  instance_type               = "${var.instance_type}"
-  key_name                    = "${aws_key_pair.ben_key_pair.key_name}"
-  vpc_security_group_ids      = ["${aws_security_group.aws-demo.id}"]
-  subnet_id                   = "${aws_subnet.aws-demo-1b.id}"
-  count                       = "${var.count-1b}"
-  associate_public_ip_address = true
-
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
-
-  connection {
-    type = "ssh"
-    user = "ubuntu"
-  }
-
-  root_block_device {
-    volume_type = "gp2"
-    volume_size = 20
-  }
-
-  tags {
-    Name = "swarm-node-1b-${count.index}"
-    role = "${count.index < var.managers_in_zone ? "manager" : "worker"}"
   }
 }

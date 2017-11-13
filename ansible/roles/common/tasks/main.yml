@@ -1,0 +1,11 @@
+- name: Set the hostname
+  hostname:
+    name: "{{ myhostname }}"
+
+- name: Add the hostname after `127.0.0.1 localhost` in /etc/hosts
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '^127\.0\.0\.1[ \t]+localhost'
+    line: '127.0.0.1 localhost {{ myhostname }}'
+    state: present
+
