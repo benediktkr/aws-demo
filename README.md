@@ -73,6 +73,17 @@ aws-demo.sudo.is.	NS	ns-62.awsdns-07.com.
 aws-demo.sudo.is.	NS	ns-748.awsdns-29.net.
 ```
 
+If the domain is delegated with the `NS` records correct, you can use the DNS name to SSH to one of the instances to check that everything is working as supposed (otherwise you can use the IP outputed by terraform).
+
+```shell
+aws-demo$ ssh swarm-node-1.aws-demo.sudo.is
+ubuntu@swarm-node-0:~$ sudo docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS
+9mpyjxznwf5tdawrlv8xxfwo8     swarm-node-2        Ready               Active              Reachable
+gumqc06pqtn6vnnoa1fxs5bt0 *   swarm-node-0        Ready               Active              Leader
+n2fflejq35acvil36xsh6ashy     swarm-node-1        Ready               Active              Reachable
+```
+
 # Todo
 
 Use a CI/CD to run a simple container ([joshuaconner/hello-world-docker-bottle](https://github.com/joshuaconner/hello-world-docker-bottle)) and deployed with a CI/CD server.
