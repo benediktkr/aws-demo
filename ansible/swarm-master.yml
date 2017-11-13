@@ -4,6 +4,6 @@
    - common
    - docker
   tasks:
-    - name: test
-      command: /bin/touch /tmp/test.txt
-
+    - include_role:
+        name: swarm-init
+      when: "master = 'true'"

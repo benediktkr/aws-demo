@@ -9,12 +9,14 @@ resource "aws_key_pair" "ben_key_pair" {
 }
 
 
-## not outdated
 variable "node_count" {
+  default = 3
+}
+
+variable "manager_count" {
   default = 3
 }
 
 variable "instance_type" {
   default = "t2.nano"
 }
-
