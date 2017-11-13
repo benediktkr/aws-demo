@@ -2,6 +2,7 @@
   become: true
   roles:
    - common
+   - docker
   tasks:
     - name: test
       command: /bin/touch /tmp/test.txt
