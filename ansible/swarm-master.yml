@@ -6,4 +6,7 @@
   tasks:
     - include_role:
         name: swarm-init
-      when: "master = 'true'"
+      when: ismaster == 'true'
+    - include_role:
+        name: swarm-join
+      when: "ismaster != 'true'"

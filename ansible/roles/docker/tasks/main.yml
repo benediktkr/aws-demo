@@ -19,3 +19,8 @@
     name: docker-engine
     update_cache: yes
     state: present
+
+- name: Check if this node is part of a swarm
+  shell: "docker node ls"
+  ignore_errors: yes
+  register: docker_node_ls

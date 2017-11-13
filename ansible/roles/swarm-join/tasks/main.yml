@@ -1,0 +1,13 @@
+- name: Wait for manager to become ready
+  wait_for:
+    host: "{{ masterip }}"
+    port: 2375
+
+- name: "Retrieve token from master"
+  shell: "docker -H {{ masterip }} swarm join-token -q {{ swarmrole }}"
+  register: shell_docker_token
+  when:  docker_node_ls.rc != 0
+
+- name: "Join the swarm"
+  shell: "docker swarm join --token {{ shell_docker_token.stdout }} {{ masterip }}:2377"
+  when:  docker_node_ls.rc != 0
