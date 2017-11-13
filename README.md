@@ -46,7 +46,7 @@ aws-demo$ terraform apply tf/
 [....]
 Outputs:
 
-nodes-private-ip = [
+nodes-private-ips = [
     10.200.0.10,
     10.200.1.11,
     10.200.0.12

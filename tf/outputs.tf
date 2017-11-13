@@ -4,7 +4,7 @@ output "nodes-public-ips" {
   ]
 }
 
-output "nodes-private-ip" {
+output "nodes-private-ips" {
   value = [
     "${aws_instance.swarm-node.*.private_ip}",
   ]
