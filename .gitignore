@@ -57,4 +57,5 @@ node_modules
 
 # This probably wouldnt be ignored usually, but this is for a demo app. 
 terraform.tfstate
+.terraform.tfstate.lock.info
 *.retry
