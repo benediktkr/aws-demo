@@ -19,7 +19,7 @@ data "aws_ami" "ubuntu" {
 # Tha master node is put in 1a of "eu-central" (defined in stack.tf)
 
 resource "aws_instance" "swarm-node" {
-  count                       = "${var.manager_count}"
+  count                       = "${var.node_count}"
   ami                         = "${data.aws_ami.ubuntu.id}"
   instance_type               = "${var.instance_type}"
   key_name                    = "${aws_key_pair.ben_key_pair.key_name}"

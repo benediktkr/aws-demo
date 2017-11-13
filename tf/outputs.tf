@@ -10,3 +10,8 @@ output "nodes-private-ip" {
   ]
 }
 
+output "ns-servers" {
+  value = [
+    "${aws_route53_zone.aws-demo.name_servers}"
+  ]
+}

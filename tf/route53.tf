@@ -19,3 +19,14 @@ resource "aws_route53_record" "aws-demo-ns" {
     "${aws_route53_zone.aws-demo.name_servers.3}",
   ]
 }
+
+resource "aws_route53_record" "swarm-nodes" {
+  count   = "${var.node_count}"
+  zone_id = "${aws_route53_zone.aws-demo.zone_id}"
+  #name    = "${aws_instance.swarm-node.*.tags.Name}"
+  name    = "swarm-node-${count.index}"
+  type    = "CNAME"
+  records = ["${element(aws_instance.swarm-node.*.public_dns, count.index)}"]
+  ttl     = 360
+}
+

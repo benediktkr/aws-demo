@@ -10,7 +10,7 @@ resource "aws_key_pair" "ben_key_pair" {
 
 
 ## not outdated
-variable "manager_count" {
+variable "node_count" {
   default = 3
 }
 
