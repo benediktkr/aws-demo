@@ -59,10 +59,6 @@ resource "aws_instance" "swarm-node" {
 
   # And then we run ansible
   provisioner "local-exec" {
-    command =  "export ANSIBLE_HOST_KEY_CHECKING=False" # Otherwise requires manual input (but could be done better)
-  }
-
-  provisioner "local-exec" {
     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' ./ansible/swarm-master.yml --extra-vars \"myhostname=${self.tags.Name}\""
 
   }
