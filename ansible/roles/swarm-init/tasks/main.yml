@@ -1,0 +1,50 @@
+- name: Check if Docker is already listening on TCP (make playbook reusable)
+  shell: "lsof -i :2375"
+  register: shell_lsof_2375
+  ignore_errors: yes
+
+- name: Make Docker listen on TCP (used for token retrieval)
+  copy:
+    src: files/etc/systemd/system/docker-tcp.socket
+    dest: /etc/systemd/system/docker-tcp.socket
+  when: shell_lsof_2375 != 1
+
+- name: Enable service docker (set to start on boot)
+  systemd:
+    name: docker
+    enabled: yes
+
+- name: Enable service docker-tcp.socket
+  systemd:
+    name: docker-tcp.socket
+    enabled: yes
+
+- name: Stop service docker
+  systemd:
+    name: docker
+    state: stopped
+
+- name: Restart service docker-tcp.socket
+  systemd:
+    state: restarted
+    name: docker-tcp.socket
+
+- name: Restart service docker
+  systemd:
+    name: docker
+    state: restarted
+    daemon_reload: yes
+
+- name: Check if this node is part of a swarm
+  shell: "docker node ls"
+  ignore_errors: yes
+  register: shell_node_ls
+
+- name: Init a new swarm
+  shell: "docker swarm init --advertise-addr {{ ansible_default_ipv4.address }}"
+  register: shell_init
+  when: shell_node_ls.rc != 0
+
+- name: Creating the swarm cluster overlay network
+  shell: "docker network create --driver overlay --subnet 10.0.9.0/20 aws-demo"
+  when: shell_node_ls.rc != 0

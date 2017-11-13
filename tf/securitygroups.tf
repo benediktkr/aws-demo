@@ -22,10 +22,10 @@ resource "aws_security_group" "aws-demo" {
     ]
   }
 
-  # swarm-token.py
+  # For remote quries from other swarm nodes
   ingress {
-    from_port = 1337
-    to_port = 1337
+    from_port = 2375
+    to_port = 2375
     protocol = "tcp"
     cidr_blocks = ["10.200.0.0/16"]
   }
