@@ -76,3 +76,7 @@ aws-demo.sudo.is.	NS	ns-748.awsdns-29.net.
 # Todo
 
 Use a CI/CD to run a simple container ([joshuaconner/hello-world-docker-bottle](https://github.com/joshuaconner/hello-world-docker-bottle)) and deployed with a CI/CD server.
+
+# Improvements
+
+I tried to keep all of the logic in Terraform, but it feels like it belongs somewhere else --- even independently. Also, it would be better if you could just specify a total number of nodes, and an automatically correct ratio of managers/workers would be selected automatically.
