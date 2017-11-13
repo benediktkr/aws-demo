@@ -1,6 +1,6 @@
 # aws-demo
 
-This is a demo of how to set up a Docker Swarm in AWS, running a simple container ([joshuaconner/hello-world-docker-bottle](https://github.com/joshuaconner/hello-world-docker-bottle)) and deployed with a CI/CD server.
+This is a demo of how to set up a Docker Swarm in AWS.
 
 ![the cloud](http://s2.quickmeme.com/img/a7/a736c13ea9c5ad4687ceaf214c95ba2b61c41805e1e5a73877f5fd6924abd6dc.jpg)
 
@@ -72,3 +72,7 @@ aws-demo.sudo.is.	NS	ns-1512.awsdns-00.co.uk.
 aws-demo.sudo.is.	NS	ns-62.awsdns-07.com.
 aws-demo.sudo.is.	NS	ns-748.awsdns-29.net.
 ```
+
+# Todo
+
+Use a CI/CD to run a simple container ([joshuaconner/hello-world-docker-bottle](https://github.com/joshuaconner/hello-world-docker-bottle)) and deployed with a CI/CD server.
