@@ -28,23 +28,13 @@ resource "aws_default_route_table" "aws-demo" {
   }
 }
 
-
-resource "aws_subnet" "aws-demo-1a" {
+resource "aws_subnet" "aws-demo" {
+  count = "${length(var.zones)}"
   vpc_id = "${aws_vpc.aws-demo.id}"
-  cidr_block = "10.200.0.0/24"
-  availability_zone = "eu-central-1a"
+  cidr_block = "10.200.${count.index}.0/24"
+  availability_zone = "${element(var.zones, count.index)}"
 
   tags {
-    Name = "aws-demo-1a"
-  }
-}
-
-resource "aws_subnet" "aws-demo-1b" {
-  vpc_id = "${aws_vpc.aws-demo.id}"
-  cidr_block = "10.200.1.0/24"
-  availability_zone = "eu-central-1b"
-
-  tags {
-    Name = "aws-demo-1b"
+    Name = "aws-demo-${element(var.zones, count.index)}"
   }
 }

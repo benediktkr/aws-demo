@@ -10,6 +10,14 @@ resource "aws_key_pair" "ben_key_pair" {
 
 # Settings ?
 
+variable "zones" {
+  default = [
+    "eu-central-1a",
+    "eu-central-1b",
+    "eu-central-1c"
+  ]
+}
+
 variable "domainname" {
   default = "aws-demo.sudo.is"
 }

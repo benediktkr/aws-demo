@@ -1,4 +1,3 @@
-
 # Might belong more in a different file
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -16,7 +15,6 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-# Tha master node is put in 1a of "eu-central" (defined in stack.tf)
 
 resource "aws_instance" "swarm-node" {
   count                       = "${var.node_count}"
@@ -24,9 +22,9 @@ resource "aws_instance" "swarm-node" {
   instance_type               = "${var.instance_type}"
   key_name                    = "${aws_key_pair.ben_key_pair.key_name}"
   vpc_security_group_ids      = ["${aws_security_group.aws-demo.id}"]
-  private_ip                  = "10.200.${count.index % 2 == 0 ? "0" : "1"}.${10 + count.index}"
-  associate_public_ip_address = true  # remove when loadbalancer is ready
-  subnet_id                   = "${count.index % 2 == 0 ? aws_subnet.aws-demo-1a.id : aws_subnet.aws-demo-1b.id}"
+  private_ip                  = "10.200.${count.index % 3}.${10 + count.index}"
+  associate_public_ip_address = true
+  subnet_id                   = "${element(aws_subnet.aws-demo.*.id, count.index)}"
 
   # lifecycle {
   #   prevent_destroy = true
@@ -60,7 +58,6 @@ resource "aws_instance" "swarm-node" {
 
   # And then we run ansible
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' ./ansible/swarm-master.yml --extra-vars \"myhostname=${self.tags.Name} swarmrole=${self.tags.role} ismaster=${self.tags.ismaster} masterip=${aws_instance.swarm-node.0.private_ip}\""
-
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' ./ansible/swarm-master.yml --extra-vars \"myhostname=${self.tags.Name} swarmrole=${self.tags.role} ismaster=${self.tags.ismaster} masterip=${aws_instance.swarm-node.0.private_ip} node_count=${var.node_count} id=${count.index+1}\""
   }
 }
