@@ -92,6 +92,10 @@ ID                            HOSTNAME            STATUS              AVAILABILI
 9mpyjxznwf5tdawrlv8xxfwo8     swarm-node-2        Ready               Active              Reachable
 gumqc06pqtn6vnnoa1fxs5bt0 *   swarm-node-0        Ready               Active              Leader
 n2fflejq35acvil36xsh6ashy     swarm-node-1        Ready               Active              Reachable
+ubuntu@swarm-node-0:~$ sudo docker service ls
+ID                  NAME                MODE                REPLICAS            IMAGE                                           PORTS
+uacq5t6tbaut        unruffled_khorana   replicated          5/5                 joshuaconner/hello-world-docker-bottle:latest   *:8080->8080/tcp
+
 ```
 
 Then we can verify that the app answers
