@@ -23,7 +23,7 @@ variable "domainname" {
 }
 
 variable "node_count" {
-  default = 3
+  default = 5
 }
 
 variable "manager_count" {
