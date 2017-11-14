@@ -6,7 +6,7 @@ This is a demo of how to set up a Docker Swarm in AWS.
 
 ## What it does
 
-This repo uses Terraform to deploy a EC2 instances onto a VPC in AWS, with subnets in multiple AZs. Then it uses Ansible to provision a Docker Swarm on the nodes.
+This repo uses Terraform to deploy a EC2 instances onto a VPC in AWS, with subnets in multiple AZs. Then it uses Ansible to provision a Docker Swarm on the nodes and then deploys the [joshuaconner/hello-world-docker-bottle](https://github.com/joshuaconner/hello-world-docker-bottle) container on the swarm. Terraform also creates an ELB to serve HTTP traffic to and from the container.
 
 ## Configure
 
@@ -46,6 +46,10 @@ aws-demo$ terraform apply tf/
 [....]
 Outputs:
 
+elb-dns = [
+    aws-demo-helloworld-847708057.eu-central-1.elb.amazonaws.com,
+    helloworld.aws-demo.sudo.is
+]
 nodes-private-ips = [
     10.200.0.10,
     10.200.1.11,
@@ -90,10 +94,17 @@ gumqc06pqtn6vnnoa1fxs5bt0 *   swarm-node-0        Ready               Active    
 n2fflejq35acvil36xsh6ashy     swarm-node-1        Ready               Active              Reachable
 ```
 
-# Todo
+Then we can verify that the app answers
 
-Use a CI/CD to run a simple container ([joshuaconner/hello-world-docker-bottle](https://github.com/joshuaconner/hello-world-docker-bottle)) and deployed with a CI/CD server.
+```shell
+aws-demo$ curl http://helloworld.aws-demo.sudo.is/
+Hello World!
+```
+
+If you haven't delegated the subdomain, you should use the ELBs public dns name, in this case `aws-demo-helloworld-847708057.eu-central-1.elb.amazonaws.com`.
 
 # Improvements
 
 I tried to keep all of the logic in Terraform, but it feels like it belongs somewhere else --- even independently. Also, it would be better if you could just specify a total number of nodes, and an automatically correct ratio of managers/workers would be selected automatically.
+
+The `local-exec` command that invokes Ansible is terribly messy and has handcrafted JSON. Also, due to limitation in Terraform, you can only configure one app in `stack.tf`, but the Ansible is able to handle a list of apps.
