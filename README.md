@@ -35,6 +35,13 @@ variable "manager_count" {
 variable "instance_type" {
   default = "t2.nano"
 }
+
+variable "hello-world-app" {
+  default = {
+    name = "joshuaconner/hello-world-docker-bottle"
+    port = 8080
+  }
+}
 ```
 
 ## How to run
