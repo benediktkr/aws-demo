@@ -21,7 +21,7 @@ resource "aws_instance" "swarm-node" {
   ami                         = "${data.aws_ami.ubuntu.id}"
   instance_type               = "${var.instance_type}"
   key_name                    = "${aws_key_pair.ben_key_pair.key_name}"
-  vpc_security_group_ids      = ["${aws_security_group.aws-demo.id}"]
+  vpc_security_group_ids      = ["${aws_security_group.aws-demo-swarm.id}"]
   private_ip                  = "10.200.${count.index % 3}.${10 + count.index}"
   associate_public_ip_address = true
   subnet_id                   = "${element(aws_subnet.aws-demo.*.id, count.index)}"

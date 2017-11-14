@@ -2,7 +2,7 @@ resource "aws_elb" "aws-demo-helloworld" {
   name               = "aws-demo-helloworld"
 
   listener {
-    instance_port     = 8080
+    instance_port     = "${var.hello-world-app["port"]}"
     instance_protocol = "http"
     lb_port           = 80
     lb_protocol       = "http"
@@ -11,7 +11,7 @@ resource "aws_elb" "aws-demo-helloworld" {
   health_check {
     healthy_threshold   = 2
     unhealthy_threshold = 2
-    target              = "HTTP:8080/"
+    target              = "TCP:${var.hello-world-app["port"]}"
     interval            = 10
     timeout             = 2
   }

@@ -107,4 +107,4 @@ If you haven't delegated the subdomain, you should use the ELBs public dns name,
 
 I tried to keep all of the logic in Terraform, but it feels like it belongs somewhere else --- even independently. Also, it would be better if you could just specify a total number of nodes, and an automatically correct ratio of managers/workers would be selected automatically.
 
-The `local-exec` command that invokes Ansible is terribly messy and has handcrafted JSON. Also, due to limitation in Terraform, you can only configure one app in `stack.tf`, but the Ansible is able to handle a list of apps.
+The `local-exec` command that invokes Ansible is terribly messy and has handcrafted JSON. Also, due to limitation in Terraform, you can only configure one app in `stack.tf`, but the Ansible is able to handle a list of apps. It might be better to have that part of the configuration in Ansible and not Terraform.

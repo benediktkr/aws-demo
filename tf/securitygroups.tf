@@ -1,5 +1,5 @@
-resource "aws_security_group" "aws-demo" {
-  name = "aws-demo"
+resource "aws_security_group" "aws-demo-swarm" {
+  name = "aws-demo-swarm"
   description = "Security group for EC2 instances running swarm"
   vpc_id = "${aws_vpc.aws-demo.id}"
 
@@ -62,6 +62,13 @@ resource "aws_security_group" "aws-demo" {
     cidr_blocks = ["10.200.0.0/16"]
   }
 
+  ingress {
+    from_port = "${var.hello-world-app["port"]}"
+    to_port = "${var.hello-world-app["port"]}"
+    protocol = "tcp"
+    cidr_blocks = ["10.200.0.0/16"]
+  }
+
   egress {
     from_port = 0
     to_port = 0
@@ -97,30 +104,5 @@ resource "aws_security_group" "aws-demo-elb" {
 
   tags {
     Name = "aws-demo-elb"
-  }
-}
-
-resource "aws_security_group" "aws-demo-helloworld" {
-  name = "aws-demo-helloworld"
-  description = "Security group for helloworld app"
-  vpc_id = "${aws_vpc.aws-demo.id}"
-
-  ingress {
-    from_port = "${var.hello-world-app["port"]}"
-    to_port = "${var.hello-world-app["port"]}"
-    protocol = "tcp"
-    cidr_blocks = ["10.200.0.0/16"]
-  }
-
-  egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-
-  tags {
-    Name = "aws-demo-helloworld"
   }
 }
