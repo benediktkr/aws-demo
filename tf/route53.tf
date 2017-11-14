@@ -28,3 +28,11 @@ resource "aws_route53_record" "swarm-nodes" {
   records = ["${element(aws_instance.swarm-node.*.public_dns, count.index)}"]
   ttl     = 360
 }
+
+resource "aws_route53_record" "helloworld" {
+  zone_id = "${aws_route53_zone.aws-demo.zone_id}"
+  name    = "helloworld"
+  type    = "CNAME"
+  records = ["${aws_elb.aws-demo-helloworld.dns_name}"]
+  ttl     = 360
+}

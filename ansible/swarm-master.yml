@@ -4,9 +4,15 @@
    - common
    - docker
   tasks:
-    - include_role:
+    - name: "Master node"
+      include_role:
         name: swarm-init
       when: ismaster == 'true'
-    - include_role:
+    - name: Managers and Workers"
+      include_role:
         name: swarm-join
       when: "ismaster != 'true'"
+    - name: "Deploy Docker services"  #
+      include_role:
+        name: swarm-services
+      when: "myid|int  == node_count|int - 1"

@@ -1,0 +1,9 @@
+- name: "Pull Docker images"
+  shell: "docker pull {{ item.name }}"
+  with_items:
+   - "{{ services }}"
+
+- name: "Create Docker services on the swarm"
+  shell: "docker service create --replicas {{ node_count }} --publish {{ item.port }}:{{item.port}} --network aws-demo {{ item.name }}"
+  with_items:
+   - "{{ services }}"

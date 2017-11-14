@@ -23,7 +23,7 @@ variable "domainname" {
 }
 
 variable "node_count" {
-  default = 5
+  default = 3
 }
 
 variable "manager_count" {
@@ -32,4 +32,11 @@ variable "manager_count" {
 
 variable "instance_type" {
   default = "t2.nano"
+}
+
+variable "hello-world-app" {
+  default = {
+    name = "joshuaconner/hello-world-docker-bottle"
+    port = 8080
+  }
 }

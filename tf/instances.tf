@@ -58,6 +58,13 @@ resource "aws_instance" "swarm-node" {
 
   # And then we run ansible
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' ./ansible/swarm-master.yml --extra-vars \"myhostname=${self.tags.Name} swarmrole=${self.tags.role} ismaster=${self.tags.ismaster} masterip=${aws_instance.swarm-node.0.private_ip} node_count=${var.node_count} id=${count.index+1}\""
+    command = <<EOF
+ANSIBLE_HOST_KEY_CHECKING=False \
+ansible-playbook \
+    -u ubuntu \
+    -i '${self.public_ip},' \
+    ./ansible/swarm-master.yml \
+    --extra-vars '{"myhostname": "${self.tags.Name}", "swarmrole": "${self.tags.role}", "ismaster": "${self.tags.ismaster}", "masterip": "${aws_instance.swarm-node.0.private_ip}", "node_count": "${var.node_count}", "myid": "${count.index}", "services": [ ${jsonencode(var.hello-world-app)}, ]}'
+EOF
   }
 }

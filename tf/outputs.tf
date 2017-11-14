@@ -15,3 +15,10 @@ output "ns-servers" {
     "${aws_route53_zone.aws-demo.name_servers}"
   ]
 }
+
+output "elb-dns" {
+  value = [
+    "${aws_elb.aws-demo-helloworld.dns_name}",
+    "${aws_route53_record.helloworld.fqdn}",
+  ]
+}
