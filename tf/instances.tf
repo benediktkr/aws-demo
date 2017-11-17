@@ -52,6 +52,8 @@ resource "aws_instance" "swarm-node" {
   provisioner "remote-exec" {
     inline = [
       "echo \"hello from remote\"",
+      "sleep 3",
+      "sudo apt-get update",
       "sudo apt-get install -y python"
     ]
   }
